@@ -1,0 +1,3 @@
+
+class SoilException(Exception):
+    pass

@@ -1,0 +1,14 @@
+from configpp.soil import Config, Group, GroupMember, Location
+{extra_imports}
+message = "{message}"
+date = "{date}"
+revision_id = "{revision_id}"
+parent_id = "{parent_id}"
+
+def upgrade({upgrade_args}):
+    """put upgrade operations here"""
+    {upgrade_ops}
+
+def downgrade({downgrade_args}):
+    """put downgrade operations here"""
+    {downgrade_ops}

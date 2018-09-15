@@ -1,0 +1,5 @@
+#!/usr/bin/env python
+
+from configpp.evolution.cli import tree
+res = tree.execute()
+exit(res)
