@@ -1,16 +1,16 @@
-import os
 import logging
+import os
 import random
-from typing import Dict
 import shutil
-
 from collections import OrderedDict, defaultdict
+from typing import Dict
 
-from configpp.soil import create_from_url, Group, YamlTransform, ConfigBase, Config, GroupMember
+from voluptuous import Schema
+from configpp.soil import Config, ConfigBase, Group, GroupMember, YamlTransform, create_from_url
 
+from .chain import Chain
 from .exceptions import EvolutionException
 from .revision import Revision
-from .chain import Chain
 from .utils import decorate_logger_message
 
 logger = logging.getLogger(__name__)
@@ -18,6 +18,14 @@ logger = logging.getLogger(__name__)
 class Evolution():
 
     DEFAULT_FOLDER = 'evolution'
+
+    CONFIG_SCHEMA = Schema({
+        'script_location': str,
+        'revision_template_file': str,
+        'configpp_urls': Schema({
+            str: str,
+        })
+    }, required = True)
 
     def __init__(self, config: dict = None):
         logger.info("Evolution started. (init config: %s)", config)
@@ -45,8 +53,6 @@ class Evolution():
         versions_folder = os.path.join(folder, self._versions_folder_name)
         os.mkdir(versions_folder)
         logger.info("Create directory %s", versions_folder)
-
-        # check the schema with volouptuouous
 
         target_template_path = os.path.join(folder, os.path.basename(Revision.ORIGINAL_TEMPLATE_FILE_PATH))
         shutil.copyfile(Revision.ORIGINAL_TEMPLATE_FILE_PATH, target_template_path)
@@ -77,6 +83,8 @@ class Evolution():
                 return False
             with open(self._config_filename) as f:
                 self._config = self._yaml.deserialize(f.read())
+
+        Evolution.CONFIG_SCHEMA(self._config)
 
         self._versions_folder = os.path.join(self._config['script_location'], self._versions_folder_name)
 

@@ -28,14 +28,14 @@ def test_init():
         assert fs.get_data(config['revision_template_file'])
 
 
-@mockfs({'evolution': {'versions':{}}, 'evolution.yaml': 'script_location: evolution'})
+@mockfs({'evolution': {'versions':{}}, 'evolution.yaml': 'script_location: evolution\nrevision_template_file: some\nconfigpp_urls: {}'})
 def test_load():
 
     ev = Evolution()
     assert ev.load()
 
 
-@mockfs({'evolution': {'versions':{}}, 'evolution.yaml': 'script_location: evolution42'})
+@mockfs({'evolution': {'versions':{}}, 'evolution.yaml': 'script_location: evolution42\nrevision_template_file: some\nconfigpp_urls: {}'})
 def test_load_nonexists_folder():
 
     ev = Evolution()
