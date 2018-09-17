@@ -9,12 +9,14 @@ from .utils import FileSystem, mock_import
 
 @pytest.fixture(scope = 'function')
 def fs():
-    template_file_path = Revision.TEMPLATE_FILE_PATH
+    template_file_path = Revision.ORIGINAL_TEMPLATE_FILE_PATH
     with open(template_file_path) as f:
         template_file_content = f.read()
 
-    fs = FileSystem({'versions': {}})
-    fs.set_data(template_file_path, template_file_content, True)
+    fs = FileSystem({
+        'versions': {},
+        'script.py.tmpl': template_file_content,
+    })
 
     return fs
 
@@ -26,7 +28,7 @@ def create_chain(fs, count = 4, message_template = 'teve{}') -> Chain:
     chain = Chain('/versions')
     with fs.mock():
         while len(chain) < count:
-            chain.add(message_template.format(len(chain)))
+            chain.add(message_template.format(len(chain)), 'script.py.tmpl')
     return chain
 
 @mockfs({'versions': {}})
@@ -40,7 +42,7 @@ def test_dump_and_load(fs: FileSystem, chain: Chain):
     rev = Revision('teve', 'ba79834caa9d', datetime(2018, 1, 1, 18, 42, 42))
 
     with fs.mock():
-        chain.dump(rev)
+        chain.dump(rev, 'script.py.tmpl')
 
         with mock_import(fs):
             assert rev == chain.load(rev.filename)
@@ -50,7 +52,7 @@ def test_create_first_rev_on_chain(fs: FileSystem, chain: Chain):
 
     with fs.mock():
         chain.build()
-        rev = chain.add('teve')
+        rev = chain.add('teve', 'script.py.tmpl')
 
         assert os.path.isfile(os.path.join('/versions', rev.filename))
 

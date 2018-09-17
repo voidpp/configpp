@@ -2,6 +2,7 @@ import os
 import logging
 import random
 from typing import Dict
+import shutil
 
 from collections import OrderedDict, defaultdict
 
@@ -47,9 +48,12 @@ class Evolution():
 
         # check the schema with volouptuouous
 
+        target_template_path = os.path.join(folder, os.path.basename(Revision.ORIGINAL_TEMPLATE_FILE_PATH))
+        shutil.copyfile(Revision.ORIGINAL_TEMPLATE_FILE_PATH, target_template_path)
+
         self._config = {
             'script_location': folder,
-            'revision_template_file': '', # TODO
+            'revision_template_file': target_template_path,
             'configpp_urls': {},
         }
 
@@ -285,7 +289,7 @@ class Evolution():
             'downgrade_ops': '\n    '.join(downgrade_ops),
         }
 
-        rev = self._chain.add(message, extra_params)
+        rev = self._chain.add(message, self._config['revision_template_file'], extra_params)
         logger.info("Revison has been created (%s)", rev.id)
 
         if new_config:

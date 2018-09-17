@@ -13,20 +13,19 @@ from .utils import FileSystem, mock_import
 @fixture()
 def fs():
 
-    template_file_path = Revision.TEMPLATE_FILE_PATH
+    template_file_path = Revision.ORIGINAL_TEMPLATE_FILE_PATH
     with open(template_file_path) as f:
         template_file_content = f.read()
 
     data = {
         'evolution': {
-            'versions': {}
+            'versions': {},
+            'script.py.tmpl': template_file_content,
         },
         'etc': {},
     }
 
     fs = FileSystem(data)
-
-    fs.set_data(template_file_path, template_file_content, True)
 
     with fs.mock():
         with mock_import(fs):
@@ -36,6 +35,7 @@ def fs():
 def base_config():
     return {
         'script_location': 'evolution',
+        'revision_template_file': 'evolution/script.py.tmpl',
         'configpp_urls': {},
     }
 

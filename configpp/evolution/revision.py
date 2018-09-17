@@ -17,7 +17,7 @@ def gen_rev_number():
 class Revision():
 
     FILENAME_PATTERN = re.compile('([a-f\d]{%s})_.+\.py' % REVISION_NUMBER_LENGTH)
-    TEMPLATE_FILE_PATH = os.path.join(os.path.dirname(__file__), 'templates', 'script.py.tmpl')
+    ORIGINAL_TEMPLATE_FILE_PATH = os.path.join(os.path.dirname(__file__), 'templates', 'script.py.tmpl')
 
     def __init__(self, message: str, id: str, date: datetime = None, parent_id: str = '', handler = None):
         self._id = id

@@ -143,7 +143,7 @@ class Chain():
             if rev_hex not in self._links:
                 return rev_hex
 
-    def add(self, message: str, extra_params: dict = {}) -> Revision:
+    def add(self, message: str, template_path: str, extra_params: dict = {}) -> Revision:
         rev_id = self.create_new_rev_number()
         parent_rev_id = self.head
 
@@ -157,11 +157,11 @@ class Chain():
 
         logger.debug("Add new revision to chain: %s", rev)
 
-        self.dump(rev, extra_params)
+        self.dump(rev, template_path, extra_params)
 
         return rev
 
-    def dump(self, rev: Revision, extra_params: dict = {}) -> str:
+    def dump(self, rev: Revision, template_path: str, extra_params: dict = {}) -> str:
 
         data = {
             'message': rev.message,
@@ -177,7 +177,7 @@ class Chain():
 
         data.update(extra_params)
 
-        with open(Revision.TEMPLATE_FILE_PATH) as f:
+        with open(template_path) as f:
             template_content = f.read()
 
         path = os.path.join(self._folder, rev.filename)
