@@ -161,16 +161,3 @@ def test_list_node_load_two_types():
     assert cfg.servers[0].host == 'teve'
     assert cfg.servers[0].port == 42
     assert cfg.servers[1] == 21
-
-def test_simple_param_var_annotation():
-
-    tree = Tree()
-
-    @tree.root()
-    class Config():
-
-        param_simpe_1: int
-
-    cfg = tree.load({'param_simpe_1': 42})
-
-    assert cfg.param_simpe_1 == 42

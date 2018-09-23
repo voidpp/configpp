@@ -36,7 +36,6 @@ class Chain():
     def links(self):
         return self._links
 
-    # TODO? types: '[]' ']]' '[[' ']['
     def walk(self, old_rev: str = 'tail', new_rev: str = 'head', include_old = False) -> Generator[Revision, None, None]:
         """Gives back the revisions, older first."""
         emit = False
