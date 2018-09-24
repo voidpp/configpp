@@ -112,33 +112,33 @@ class Evolution():
     def revision(self, message: str, new_config_url: str = None) -> Revision:
         """Generate revsion
 
-        limitations: invalid member collection: core.yaml AND core.json
+            limitations: invalid member collection: core.yaml AND core.json
 
-        Args:
-            message: revision message
-            new_config_url: config url in configpp.soil format
+            Args:
+                message: revision message
+                new_config_url: config url in configpp.soil format
 
-        Returns:
-            Revision: the created revision
+            Returns:
+                Revision: the created revision
 
-        Raises:
+            Raises:
 
-        Scenarios:
-             1. first rev, single config                ✔
-             2. first rev, group config                 ✔
-             3. single config not changed               ✔
-             4. group config not changed                ✔
-             5. single config change to group config    ✔
-             6. group config change to single config    ✔
-             7. group config add new member             ✔
-             8. group config del member                 ✔
-             9. single config change name               ✔
-            10. group config change name                ✔
-            11. group member config change name         ✔ (add/del)
-            12. single config change transform          ✔
-            13. group config member change transform    ✔
-            14. use custom transform                    ✔
-            15. use custom transport                    ✔
+            Scenarios:
+                1. first rev, single config                ✔
+                2. first rev, group config                 ✔
+                3. single config not changed               ✔
+                4. group config not changed                ✔
+                5. single config change to group config    ✔
+                6. group config change to single config    ✔
+                7. group config add new member             ✔
+                8. group config del member                 ✔
+                9. single config change name               ✔
+                10. group config change name                ✔
+                11. group member config change name         ✔ (add/del)
+                12. single config change transform          ✔
+                13. group config member change transform    ✔
+                14. use custom transform                    ✔
+                15. use custom transport                    ✔
         """
 
         logger.info("Create revision, msg: '%s'", message)
@@ -377,9 +377,6 @@ class Evolution():
         logger.debug("the current version: %s", current_version)
 
         for rev in self._chain.walk(current_version, target_version, include_old = current_version == 'tail'):
-
-            # if rev.id in configs:
-
 
             args = []
             if current_config:
