@@ -25,6 +25,7 @@
             "pytest~=3.2",
             "pytest-cov~=2.5",
             "voidpp-tools~=1.11",
+            "coveralls~=1.2",
             "pytest-watch~=4.1"
         ],
         "docs": [
