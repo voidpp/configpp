@@ -1,11 +1,12 @@
 {
     "name": "configpp",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "A config manager library for a brighter future!",
     "author": "Lajos Santa",
     "author_email": "santa.lajos@gmail.com",
     "url": "https://github.com/voidpp/configpp",
     "license": "MIT",
+    "include_package_data": true,
     "install_requires": [
         "voluptuous~=0.10",
         "command-tree~=0.7",
