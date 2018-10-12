@@ -19,7 +19,7 @@ def import_class(uri: str):
 
     return getattr(import_module(parts[0]), parts[1])
 
-_config_pattern = re.compile('([\w.]+)(\?)?(%([\w.:]+))?')
+_config_pattern = re.compile(r'([\w.\-]+)(\?)?(%([\w.:]+))?')
 
 def parse_config_definition(definition: str):
     res = _config_pattern.match(definition)
@@ -42,11 +42,11 @@ def create_from_url(url: str) -> ConfigBase:
         configpp://core.yaml%configpp.soil.transform:YamlTransform&logger.yaml%configpp.soil.transform:YamlTransform@app/configpp.soil.transport:Transport
         configpp://core.yaml&logger.yaml@app
     """
-    res = re.match('configpp:\/\/([\w.:%&\?]+)(@[\w]+)?(/[\w.:]+)?(#[\w.:]+)?', url)
+    res = re.match(r'configpp:\/\/([\w.\-:%&\?]+)(@[\w]+)?(/[\w.:]+)?(#[\w.:]+)?', url)
     if not res:
         raise SoilUriParserException("Wrong uri format")
 
-    config_defs, group_name, transport, location = res.groups()
+    config_defs, group_name, transport, _ = res.groups()
 
     transport_class = import_class(transport) if transport else Transport
 

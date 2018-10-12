@@ -14,6 +14,22 @@ def test_very_simple_uri():
     assert isinstance(cfg.transform, YamlTransform)
     assert cfg.name == 'app.yaml'
 
+def test_url_with_hypen():
+
+    cfg = create_from_url('configpp://app-teve.yaml')
+
+    assert isinstance(cfg, Config)
+    assert isinstance(cfg.transform, YamlTransform)
+    assert cfg.name == 'app-teve.yaml'
+
+def test_url_with_underscore():
+
+    cfg = create_from_url('configpp://app_teve.yaml')
+
+    assert isinstance(cfg, Config)
+    assert isinstance(cfg.transform, YamlTransform)
+    assert cfg.name == 'app_teve.yaml'
+
 def test_very_simple_group_uri():
 
     grp = create_from_url('configpp://core.yaml&logger.json@app1')
@@ -56,12 +72,12 @@ def test_single_uri_with_custom_transport():
 def test_single_uri_with_bad_custom_transform():
 
     with raises(SoilUriParserException):
-        grp = create_from_url('configpp://app.yaml%dummy')
+        create_from_url('configpp://app.yaml%dummy')
 
 def test_single_bad_uri():
 
     with raises(SoilUriParserException):
-        grp = create_from_url('app.yaml')
+        create_from_url('app.yaml')
 
 def test_single_uri_with_location():
 

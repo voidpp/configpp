@@ -1,6 +1,6 @@
 {
     "name": "configpp",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "A config manager library for a brighter future!",
     "author": "Lajos Santa",
     "author_email": "santa.lajos@gmail.com",
