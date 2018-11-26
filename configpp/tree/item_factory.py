@@ -1,16 +1,15 @@
 import inspect
 from abc import ABC, abstractmethod
-from typing import Dict
 from functools import partial
-from voluptuous import Required, Optional, UNDEFINED, Schema, MultipleInvalid
-
-from configpp.tree.items import NodeBase
-from configpp.tree.exceptions import ConfigTreeBuilderException, ConfigTreeDumpException
-from configpp.tree.settings import Settings
-
-from typing import get_type_hints, GenericMeta
-
 from re import finditer
+from typing import Dict, get_type_hints
+
+import typing_inspect
+from voluptuous import UNDEFINED, MultipleInvalid, Optional, Required, Schema
+
+from configpp.tree.exceptions import ConfigTreeBuilderException, ConfigTreeDumpException
+from configpp.tree.items import NodeBase
+from configpp.tree.settings import Settings
 
 def camel_case_split(identifier):
     matches = finditer('.+?(?:(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])|$)', identifier)
@@ -142,15 +141,17 @@ class AttrNodeFactory(NodeFactory):
 
         attr_id = id(attr)
 
+        attr_typing_origin = typing_inspect.get_origin(attr)
+
         if hasattr(attr, '_configpp_tree_item'):
             item = getattr(attr, '_configpp_tree_item')
         elif attr_id in self._external_item_registry:
             item = self._external_item_registry[attr_id]
-        elif isinstance(attr, GenericMeta):
-            if issubclass(attr, list):
-                item = ListNodeFactory(attr.__args__, self._settings, self._leaf_factory_registry)
-            elif issubclass(attr, dict):
-                item = DictNodeFactory(*attr.__args__, self._settings, self._leaf_factory_registry)
+        elif attr_typing_origin:
+            if attr_typing_origin == list:
+                item = ListNodeFactory(typing_inspect.get_args(attr), self._settings, self._leaf_factory_registry)
+            elif attr_typing_origin == dict:
+                item = DictNodeFactory(*typing_inspect.get_args(attr), self._settings, self._leaf_factory_registry)
             else:
                 # TODO print some log error?
                 return
@@ -216,7 +217,7 @@ class DictNodeFactory(NodeFactory):
 
     def dump(self, instance: dict):
         res = {}
-        for key, value in instance.items():
+        for key in instance:
             res[key] = self._item.dump(instance[key])
         return res
 
