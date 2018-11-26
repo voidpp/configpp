@@ -13,6 +13,7 @@
         "python-slugify~=1.2",
         "python-dateutil~=2.7",
         "ruamel.yaml~=0.15.44",
+        "typing-inspect~=0.3",
         "PyYAML~=3.12"
     ],
     "packages": [
