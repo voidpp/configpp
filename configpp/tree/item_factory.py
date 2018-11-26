@@ -2,7 +2,7 @@ import inspect
 from abc import ABC, abstractmethod
 from functools import partial
 from re import finditer
-from typing import Dict, get_type_hints
+from typing import Dict, get_type_hints, List
 
 import typing_inspect
 from voluptuous import UNDEFINED, MultipleInvalid, Optional, Required, Schema
@@ -148,9 +148,9 @@ class AttrNodeFactory(NodeFactory):
         elif attr_id in self._external_item_registry:
             item = self._external_item_registry[attr_id]
         elif attr_typing_origin:
-            if attr_typing_origin == list:
+            if attr_typing_origin in (list, List):
                 item = ListNodeFactory(typing_inspect.get_args(attr), self._settings, self._leaf_factory_registry)
-            elif attr_typing_origin == dict:
+            elif attr_typing_origin in (dict, Dict):
                 item = DictNodeFactory(*typing_inspect.get_args(attr), self._settings, self._leaf_factory_registry)
             else:
                 # TODO print some log error?
