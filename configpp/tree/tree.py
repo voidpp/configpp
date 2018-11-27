@@ -1,11 +1,12 @@
 import logging
-from voluptuous import Schema, UNDEFINED
 
-from configpp.tree.settings import Settings
+from voluptuous import UNDEFINED, Schema
+
+from configpp.tree.custom_item_factories import DateTimeLeafFactory, Enum, EnumLeafFactory, LeafBaseFactory, datetime
 from configpp.tree.exceptions import ConfigTreeBuilderException
-from configpp.tree.item_factory import AttrNodeFactory, LeafFactory, DictNodeFactory, ListNodeFactory, LeafFactoryRegistry
-
-from configpp.tree.custom_item_factories import DateTimeLeafFactory, datetime, EnumLeafFactory, Enum
+from configpp.tree.item_factory import AttrNodeFactory, DictNodeFactory, LeafFactory, LeafFactoryRegistry, ListNodeFactory
+from configpp.tree.items import LeafBase
+from configpp.tree.settings import Settings
 
 logger = logging.getLogger(__name__)
 
@@ -18,6 +19,7 @@ class Tree():
         self._leaf_factory_registry = {
             datetime: DateTimeLeafFactory,
             Enum: EnumLeafFactory,
+            LeafBase: LeafBaseFactory,
         }  # type: LeafFactoryRegistry
 
     def register_leaf_factory(self, type_: type, factory: LeafFactory):

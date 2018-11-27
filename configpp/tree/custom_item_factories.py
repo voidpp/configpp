@@ -1,10 +1,16 @@
 
-from enum import Enum
+import re
+from copy import copy
 from datetime import datetime
-from dateutil.parser import parse
-from voluptuous import Invalid, Any
+from enum import Enum
+from typing import List
 
-from .item_factory import LeafFactory, UNDEFINED
+from dateutil.parser import parse
+from voluptuous import Any, Invalid, MatchInvalid
+
+from .item_factory import UNDEFINED, LeafFactory
+from .items import LeafBase
+
 
 class DateTimeLeafFactory(LeafFactory):
 
@@ -33,3 +39,12 @@ class EnumLeafFactory(LeafFactory):
 
     def dump(self, value):
         return value.value
+
+class LeafBaseFactory(LeafFactory):
+
+    def __init__(self, leaf: LeafBase, default = UNDEFINED):
+        super().__init__(None, default)
+        self._leaf = leaf
+
+    def create_schema(self):
+        return self._leaf.get_validator()

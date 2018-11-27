@@ -1,7 +1,8 @@
 
-from pytest import mark
-from configpp.tree import Tree, NodeBase
+from pytest import mark, raises
+from configpp.tree import Tree, NodeBase, LeafFactory
 from typing import List, Dict
+from voluptuous import MultipleInvalid
 
 def test_simple_param_default():
 
@@ -161,3 +162,17 @@ def test_list_node_load_two_types():
     assert cfg.servers[0].host == 'teve'
     assert cfg.servers[0].port == 42
     assert cfg.servers[1] == 21
+
+def test_pure_leaf_factory():
+
+    tree = Tree()
+
+    @tree.root()
+    class Config():
+
+        var1 = LeafFactory(int, 42)
+
+    assert tree.load({}).var1 == 42
+
+    with raises(MultipleInvalid):
+        assert tree.load({'var1': 'teve'})

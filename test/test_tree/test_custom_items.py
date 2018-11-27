@@ -2,6 +2,7 @@
 from enum import Enum, IntEnum
 from configpp.tree import Tree
 from datetime import datetime
+from configpp.tree.custom_items import DatabaseLeaf
 
 def test_load_datetime_default():
     tree = Tree()
@@ -124,3 +125,18 @@ def test_load_int_enum():
     cfg = tree.load({'param': 1})
 
     assert cfg.param == Camel.ONE
+
+def test_load_database():
+
+    tree = Tree()
+
+    @tree.root()
+    class Config():
+
+        param = DatabaseLeaf
+
+    print(tree.build_schema())
+
+    cfg = tree.load({'param': 'teve://user:pass@domain.hu/dbname'}) # type: Config
+
+    assert cfg.param.driver == 'teve'
