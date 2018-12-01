@@ -3,7 +3,7 @@ import re
 from copy import copy
 from typing import List
 
-from voluptuous import MatchInvalid
+from voluptuous import MatchInvalid, Schema, Required
 
 from .items import UNDEFINED, LeafBase
 
@@ -53,3 +53,29 @@ class DatabaseLeaf(LeafBase):
             port = ':{}'.format(self.port) if self.port else '',
         )
         return '{driver}://{auth}{host}{port}/{name}'.format(**data)
+
+class PythonLoggerLeaf(LeafBase):
+
+    @classmethod
+    def get_validator(cls):
+        return Schema({
+            'disable_existing_loggers': bool,
+            'formatters': Schema({
+                str: dict,
+            }),
+            'handlers': Schema({
+                str: Schema({
+                    Required('class'): str,
+                    Required('formatter'): str,
+                    'level': str,
+                }, extra = True),
+            }),
+            'loggers': Schema({
+                str: Schema({
+                    'handlers': list,
+                    'level': str,
+                    'propagate': bool,
+                }, required = True),
+            }),
+            'version': int,
+        })

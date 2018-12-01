@@ -2,7 +2,7 @@
 from enum import Enum, IntEnum
 from configpp.tree import Tree
 from datetime import datetime
-from configpp.tree.custom_items import DatabaseLeaf
+from configpp.tree.custom_items import DatabaseLeaf, PythonLoggerLeaf
 
 def test_load_datetime_default():
     tree = Tree()
@@ -140,3 +140,44 @@ def test_load_database():
     cfg = tree.load({'param': 'teve://user:pass@domain.hu/dbname'}) # type: Config
 
     assert cfg.param.driver == 'teve'
+
+def test_load_logger_config():
+
+    tree = Tree()
+
+    @tree.root()
+    class Config():
+
+        param = PythonLoggerLeaf
+
+    print(tree.build_schema())
+
+    data = {
+        "disable_existing_loggers": True,
+        "formatters": {
+            "standard": {
+                "format": "%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(name)s: %(message)s"
+            }
+        },
+        "handlers": {
+            "console": {
+                "class": "logging.StreamHandler",
+                "formatter": "standard",
+                "level": "DEBUG"
+            },
+        },
+        "loggers": {
+            "teve": {
+                "handlers": [
+                    "console"
+                ],
+                "level": "DEBUG",
+                "propagate": True
+            },
+        },
+        "version": 1
+    }
+
+    cfg = tree.load({'param': data}) # type: Config
+
+    assert cfg.param == data
