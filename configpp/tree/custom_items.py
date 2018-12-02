@@ -19,6 +19,8 @@ class DatabaseLeaf(LeafBase):
     password = None # type: str
     name = None # type: str
 
+    uri = None # type: str
+
     @classmethod
     def get_validator(cls):
         def validator(val):
@@ -45,6 +47,8 @@ class DatabaseLeaf(LeafBase):
             self.username = groups[1]
             self.password = groups[2]
             self.name = groups[11]
+
+            self.uri = uri
 
     def __str__(self):
         data = copy(self.__dict__)

@@ -140,6 +140,12 @@ def test_load_database():
     cfg = tree.load({'param': 'teve://user:pass@domain.hu/dbname'}) # type: Config
 
     assert cfg.param.driver == 'teve'
+    assert cfg.param.username == 'user'
+    assert cfg.param.password == 'pass'
+    assert cfg.param.host == 'domain.hu'
+    assert cfg.param.name == 'dbname'
+    assert not cfg.param.port
+    assert cfg.param.uri == 'teve://user:pass@domain.hu/dbname'
 
 def test_load_logger_config():
 
