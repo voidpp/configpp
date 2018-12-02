@@ -1,7 +1,7 @@
 from abc import ABC, abstractproperty, abstractmethod
 import logging
 
-from configpp.soil.transform import TransformBase, JSONTransform
+from configpp.soil.transform import TransformBase, JSONTransform, guess_transform_for_file
 from configpp.soil.transport import Transport, Location
 from configpp.soil.exception import SoilException
 
@@ -119,7 +119,7 @@ class Config(ConfigFileBase):
     """
 
     def __init__(self, name: str, transform: TransformBase = None, transport: Transport = None):
-        super().__init__(name, transform or JSONTransform())
+        super().__init__(name, transform or guess_transform_for_file(name, JSONTransform)())
         self._transport = transport or Transport()
         logger.debug("Config initialized: %r", self)
 

@@ -1,8 +1,8 @@
 
-from pytest import raises
+from pytest import raises, mark
 from unittest.mock import patch
 
-from configpp.soil import JSONTransform, YamlTransform, Transport
+from configpp.soil import JSONTransform, YamlTransform, Transport, Config, GroupMember
 
 from configpp.soil.utils import create_from_url, SoilUriParserException, Config, Group
 
@@ -100,3 +100,14 @@ def test_group_with_optional_member():
     assert grp.name == 'app1'
     assert members[0].mandatory is True
     assert members[1].mandatory is False
+
+@mark.parametrize('filename, transform', [
+    ('appname', JSONTransform),
+    ('appname.json', JSONTransform),
+    ('appname.yaml', YamlTransform),
+    ('appname.yml', YamlTransform),
+])
+def test_guessing_in_ctors(filename, transform):
+
+    assert isinstance(Config(filename).transform, transform)
+    assert isinstance(GroupMember(filename).transform, transform)

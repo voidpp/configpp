@@ -6,7 +6,7 @@ from collections import OrderedDict
 from configpp.soil.config import ConfigFileBase, DEFAULT, ConfigBase
 from configpp.soil.transport import Transport, Location
 from configpp.soil.exception import SoilException
-from configpp.soil.transform import TransformBase, JSONTransform
+from configpp.soil.transform import TransformBase, JSONTransform, guess_transform_for_file
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +16,7 @@ class GroupException(SoilException):
 class GroupMember(ConfigFileBase):
 
     def __init__(self, name: str, transform: TransformBase = None, mandatory = True):
-        super().__init__(name, transform or JSONTransform())
+        super().__init__(name, transform or guess_transform_for_file(name, JSONTransform)())
         self._mandatory = mandatory
         self._group_name = None
 

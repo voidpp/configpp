@@ -69,6 +69,6 @@ class YamlTransform(TransformBase):
         return yaml.load(data, Loader = yaml.RoundTripLoader)
 
 
-def guess_transform_for_file(filename):
-    name, ext = os.path.splitext(filename)
-    return _transform_extensions.get(ext[1:])
+def guess_transform_for_file(filename, default = None):
+    _, ext = os.path.splitext(filename)
+    return _transform_extensions.get(ext[1:], default)
