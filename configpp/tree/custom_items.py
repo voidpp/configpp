@@ -11,6 +11,7 @@ from .items import UNDEFINED, LeafBase
 class DatabaseLeaf(LeafBase):
 
     _pattern = re.compile(r'([a-z0-9\+]{1,})://([^:]+):([^@]+)@(([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]).([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]).([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]).([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])|[-a-zA-Z0-9@%._\+~#=]{2,256}(\.[a-z]{2,6})?\b([-a-zA-Z0-9@%_\+.~#?&//=]*)|[a-zA-Z_-]*):?(\d*)?/([a-zA-Z_\d]+)')
+    _sqlite_pattern = re.compile(r'sqlite(\+[a-z_0-9]{1,})?:\/\/\/(.+)')
 
     driver = None # type: str
     host = None # type: str
@@ -22,13 +23,16 @@ class DatabaseLeaf(LeafBase):
     uri = None # type: str
 
     @classmethod
+    def _get_match(cls, value):
+        match = cls._pattern.match(value)
+        if not match:
+            match = cls._sqlite_pattern.match(value)
+        return match
+
+    @classmethod
     def get_validator(cls):
         def validator(val):
-            try:
-                match = cls._pattern.match(val)
-            except TypeError:
-                raise MatchInvalid("wrong database format")
-
+            match = cls._get_match(val)
             if not match:
                 raise MatchInvalid("wrong database format")
 
@@ -39,14 +43,20 @@ class DatabaseLeaf(LeafBase):
     def __init__(self, uri = None):
 
         if uri:
-            groups = self._pattern.match(uri).groups()
+            groups = self._get_match(uri).groups()
 
-            self.driver = groups[0]
-            self.host = groups[3]
-            self.port = groups[10]
-            self.username = groups[1]
-            self.password = groups[2]
-            self.name = groups[11]
+            if groups[0] is None or groups[0].startswith('+'):
+                self.driver = 'sqlite'
+                if groups[0]:
+                    self.driver += groups[0]
+                self.name = groups[1]
+            else:
+                self.driver = groups[0]
+                self.host = groups[3]
+                self.port = groups[10]
+                self.username = groups[1]
+                self.password = groups[2]
+                self.name = groups[11]
 
             self.uri = uri
 

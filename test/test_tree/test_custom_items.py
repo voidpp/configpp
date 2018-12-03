@@ -147,6 +147,24 @@ def test_load_database():
     assert not cfg.param.port
     assert cfg.param.uri == 'teve://user:pass@domain.hu/dbname'
 
+def test_load_database_sqlite():
+
+    tree = Tree()
+
+    @tree.root()
+    class Config():
+
+        param = DatabaseLeaf
+
+    print(tree.build_schema())
+
+    cfg = tree.load({'param': 'sqlite:///teve.db'}) # type: Config
+
+    assert cfg.param.driver == 'sqlite'
+    assert cfg.param.name == 'teve.db'
+    assert cfg.param.uri == 'sqlite:///teve.db'
+
+
 def test_load_logger_config():
 
     tree = Tree()
