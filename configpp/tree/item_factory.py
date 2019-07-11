@@ -163,10 +163,10 @@ class AttrNodeFactory(NodeFactory):
 
         data_key_name = name
         if self._settings.convert_underscores_to_hypens:
-            data_key_name = name.replace('_', '-')
+            data_key_name = data_key_name.replace('_', '-')
 
         if self._settings.convert_camel_case_to_hypens:
-            data_key_name = '-'.join(camel_case_split(name)).lower()
+            data_key_name = '-'.join(camel_case_split(data_key_name)).lower()
 
         self._attribute_map[name] = data_key_name
         self._items[name] = item

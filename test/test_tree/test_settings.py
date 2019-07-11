@@ -32,6 +32,23 @@ def test_dump_convert_underscores_to_hypens():
     assert data == {'param-simpe-1': 84}
 
 
+def test_dump_convert_underscores_to_hypens_and_camel_case_to_hypens():
+
+    tree = Tree(Settings(convert_underscores_to_hypens = True, convert_camel_case_to_hypens = True))
+
+    @tree.root()
+    class Config():
+
+        param_simpe_1 = 42
+
+    cfg = tree.load({})
+    cfg.param_simpe_1 = 84
+
+    data = tree.dump(cfg)
+
+    assert data == {'param-simpe-1': 84}
+
+
 def test_load_convert_camel_case_to_hypens():
 
     tree = Tree(Settings(convert_camel_case_to_hypens = True))
