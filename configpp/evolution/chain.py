@@ -1,16 +1,15 @@
-import re
-import os
-import importlib.util
-import importlib.machinery
 import logging
+import os
+import re
 from collections import OrderedDict
-from dateutil import parser
 from typing import Dict, Generator
-from enum import IntEnum
 
-from .utils import import_file
-from .revision import Revision, gen_rev_number
+from dateutil import parser
+
 from .exceptions import EvolutionException
+from .revision import Revision, gen_rev_number
+from .utils import import_file
+
 
 class ChainException(EvolutionException):
     pass
@@ -22,7 +21,7 @@ class Chain():
     def __init__(self, folder: str):
         self._folder = folder
         self._links = OrderedDict() # type: Dict[str, Revision]
-        self._named_revisions_pattern = re.compile('([\w]+)((~|\^)([\d]{1,}))?')
+        self._named_revisions_pattern = re.compile(r'([\w]+)((~|\^)([\d]{1,}))?')
 
     @property
     def head(self) -> str:

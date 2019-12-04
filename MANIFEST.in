@@ -1,1 +1,1 @@
-include setup.json
+include pyproject.toml

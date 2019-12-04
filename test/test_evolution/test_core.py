@@ -22,7 +22,7 @@ def test_init():
         assert 'evolution' in fs_data
         assert 'evolution.yaml' in fs_data
         assert 'versions' in fs_data['evolution']
-        config = yaml.load(fs_data['evolution.yaml'])
+        config = yaml.load(fs_data['evolution.yaml'], Loader = yaml.FullLoader)
         assert 'revision_template_file' in config
         assert config['revision_template_file']
         assert fs.get_data(config['revision_template_file'])
