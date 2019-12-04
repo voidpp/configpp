@@ -185,8 +185,7 @@ class AttrNodeFactory(NodeFactory):
                 delattr(self._cls, name)
 
         for name, hint in get_type_hints(self._cls).items():
-            if name not in self._items:
-                self._iter_member(name, hint, schema_dict)
+            self._iter_member(name, hint, schema_dict)
 
         schema = Schema(schema_dict)
 

@@ -81,3 +81,16 @@ def test_load_simple_param_var_annotation():
     cfg = tree.load({'param_simpe_1': 42})
 
     assert cfg.param_simpe_1 == 42
+
+def test_repeated_schema_generation():
+
+    tree = Tree()
+
+    @tree.root()
+    class Config():
+
+        param_simpe_1: int
+
+    tree.build_schema()
+    schema = tree.build_schema()
+    assert len(schema.schema) == 1
