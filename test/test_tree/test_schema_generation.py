@@ -448,3 +448,23 @@ def test_list_of_objects():
         assert schema(source_data2)
     with raises(MultipleInvalid):
         assert schema(source_data3)
+
+def test_list_root():
+
+    tree = Tree()
+
+    @tree.list_root([int])
+    class Config():
+        pass
+
+    schema = tree.build_schema()
+    assert schema([1])
+
+def test_list_root_without_class():
+
+    tree = Tree()
+
+    tree.set_root(tree.list_node([int]))
+
+    schema = tree.build_schema()
+    assert schema([1])

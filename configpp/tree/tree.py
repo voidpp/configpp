@@ -4,7 +4,7 @@ from voluptuous import UNDEFINED, Schema
 
 from configpp.tree.custom_item_factories import DateTimeLeafFactory, Enum, EnumLeafFactory, LeafBaseFactory, datetime
 from configpp.tree.exceptions import ConfigTreeBuilderException
-from configpp.tree.item_factory import AttrNodeFactory, DictNodeFactory, LeafFactory, LeafFactoryRegistry, ListNodeFactory
+from configpp.tree.item_factory import AttrNodeFactory, DictNodeFactory, LeafFactory, LeafFactoryRegistry, ListNodeFactory, NodeFactory
 from configpp.tree.items import LeafBase
 from configpp.tree.settings import Settings
 
@@ -14,7 +14,7 @@ class Tree():
 
     def __init__(self, settings: Settings = None):
         self._settings = settings or Settings()
-        self._root = None  # type: AttrNodeFactory
+        self._root = None  # type: NodeFactory
         self._extra_items = {}
         self._leaf_factory_registry = {
             datetime: DateTimeLeafFactory,
@@ -22,13 +22,21 @@ class Tree():
             LeafBase: LeafBaseFactory,
         }  # type: LeafFactoryRegistry
 
+    def set_root(self, value: NodeFactory):
+        self._root = value
+        print(self._root)
+
     def register_leaf_factory(self, type_: type, factory: LeafFactory):
         self._leaf_factory_registry[type_] = factory
 
     def build_schema(self) -> Schema:
         if self._root is None:
             raise ConfigTreeBuilderException("There is no root!")
-        return self._root.create_schema()
+        # TODO: resolve this problem somehow else (AttrNodeFactory gives back Schema but the DictNodeFactory and the ListNodeFactory dont)
+        schema = self._root.create_schema()
+        if not callable(schema):
+            schema = Schema(schema)
+        return schema
 
     def load(self, raw_data: dict):
         schema = self.build_schema()
