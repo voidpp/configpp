@@ -24,7 +24,6 @@ class Tree():
 
     def set_root(self, value: NodeFactory):
         self._root = value
-        print(self._root)
 
     def register_leaf_factory(self, type_: type, factory: LeafFactory):
         self._leaf_factory_registry[type_] = factory
